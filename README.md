@@ -4,12 +4,11 @@
 [Pre Requisites for the service](#pre-requisites)
 [Using the service for Development](#using-the-service-for-development)
 [Using the service with Docker](#using-the-service-with-docker)
+[Exposed API's](#exposed-apis)
 
 # Introduction
 
-A Node.js web service that interacts as a webhook for Gitlab. This service will trigger an issue event(creation). It will search in the description of the created issue for the word “ping”. If it finds the word ping, it will
-
-1. It will search through all the issues under the project to check whether the word "ping" present or not.2. Count the total number of occurrence of the word "ping",3. Add a comment on the newly created issue in Gitlab with "pong" + #pings.
+A NodeJS API that creates and maintains sensor-to-participant allocations for each workout.
 
 ## Pre Requisites
 
@@ -18,16 +17,16 @@ A Node.js web service that interacts as a webhook for Gitlab. This service will 
 2. Install the following plugins in Visual Studio Code for development. a. ESLint b. Prettier - code formatter
 3. Update .env file to configure the application to work as expected with a project in Gitlab.
 
-   | Environment Variable | Description                                                |
-   | :------------------- | :--------------------------------------------------------- |
-   | GITLAB_BASE_URL      | Base URL to fetch issues/Post comments in Gitlab.          |
-   | SECRET_KEY           | Create one secret key to access Gitlab API's (Refer below) |
-   | GITLAB_PROJECT_ID    | ID of the project from Gitlab. (Refer below)               |
-   | SEARCH_WORD          | Word to be search in issue description (default: ping)     |
-
-   To create Gitlab access token(SECRET_KEY) (https://gitlab.com/profile/personal_access_tokens).
-
-   To Get Gitlab project ID with projet (Project --> Settings --> Genaeral --> [Copy project ID from the screen])
+| Environment Variable | Description              |
+| :------------------- | :----------------------- |
+| IP                   | IP of application.       |
+| PORT                 | Port of the application. |
+| POSTGRES_USER        | Postgress username       |
+| POSTGRES_PASSWORD    | Postgres password        |
+| POSTGRES_HOST        | Postgres host            |
+| POSTGRES_DB          | Postgres database name   |
+| POSTGRES_PORT        | Postgres port            |
+| POSTGRES_DIALECT     | Dialect of DB            |
 
 ## Using the service for Development
 
@@ -41,14 +40,85 @@ A Node.js web service that interacts as a webhook for Gitlab. This service will 
 
 1. Update .env files with required details(Refer Pre Requisites)
 2. Build the image using
-   "docker build --build-arg PORT=8080 -t gitlab_node_webhook ." (Use sudo, if required)
-
-   Warning: Since preinstall scripts(only needed for dev) are not copied inside the docker while building, it will show a warning during npm install step of docker build, which can be ignored.
-
-   "npm WARN lifecycle gitlab-issue-node-webhook@1.0.0~preinstall: cannot run in wd gitlab-issue-node-webhook@1.0.0 rm -fv .git/hooks/pre-commit.sample;chmod +x custom_hooks/\*;rm -fv .git/hooks/pre-commit;ln -s ../../custom_hooks/pre-commit .git/hooks/pre-commit (wd=/usr/src/app)"
+   "docker build --build-arg PORT=8080 -t fitness_sensor ." (Use sudo, if required)
 
 3) Start the container using
 
-   "docker run -p 8080:8080 gitlab_node_webhook" (Use sudo, if required). This will start the server.
+   "docker run -p 8080:8080 fitness_sensor" (Use sudo, if required). This will start the server.
 
-4) Create an issue in the project where we added webhook and comment will be added immediately if description includes desired SEARCH_WORD.
+4) Start the frontend app.
+
+## Exposed APIs
+
+1. API to get all current allocations
+
+GET http://localhost:8080/allocations/:workout_id
+
+Header userid 2
+
+    Response
+
+    {
+        "allocations": [
+            {
+                "user_id": 5,
+                "sensor_is_user_property": true,
+                "sensor_id": 5
+            },
+            {
+                "user_id": 2,
+                "sensor_is_user_property": false,
+                "sensor_id": 2
+            },
+            {
+                "user_id": 6,
+                "sensor_is_user_property": false,
+                "sensor_id": 7
+            }
+        ]
+    }
+
+2. API to get all current allocations
+
+GET http://localhost:8080/availabe_sensors
+
+Header userid 2
+
+    Response
+
+    {
+        "sensors": [
+            {
+                "id": 1,
+                "name": "s1",
+                "is_allocatable": true,
+                "is_damaged": false,
+                "is_private": false
+            },
+            {
+                "id": 2,
+                "name": "s2",
+                "is_allocatable": true,
+                "is_damaged": false,
+                "is_private": false
+            },
+            {
+                "id": 4,
+                "name": "s4",
+                "is_allocatable": true,
+                "is_damaged": false,
+                "is_private": false
+            }
+        ]
+    }
+
+3. Grab/Return the sensor with/without damage
+
+PUT http://localhost:8080/sensors/:sensor_id
+
+Header userid 3
+
+    {
+        "is_allocatable": false,
+        "is_damaged" : true
+    }
