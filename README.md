@@ -31,14 +31,25 @@ A NodeJS API that creates and maintains sensor-to-participant allocations for ea
 ## Using the service for Development
 
 1. Update the environment variable information in the file config/app.config.js file with relevant info as well as .env file.
-2. Start the node app
+
+2. Run migrations and seed data
+
+   sequelize db:migrate
+
+   sequelize db:seed:all
+
+3. Start the node app
+
    npm start
-3. To check lint issues, use
+
+4. To check lint issues, use
+
    npm run lint
 
 ## Using the service with Docker
 
 1. Update .env files with required details(Refer Pre Requisites)
+
 2. Build the image using
    "docker build --build-arg PORT=8080 -t fitness_sensor ." (Use sudo, if required)
 
