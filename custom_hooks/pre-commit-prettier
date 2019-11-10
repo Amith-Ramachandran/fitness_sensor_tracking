@@ -1,0 +1,19 @@
+#!/bin/bash
+jsfiles=$(git diff --cached --name-only --diff-filter=ACM "*.js" "*.jsx" | tr '\n' ' ')
+[ -z "$jsfiles" ] && exit 0
+
+PRETTIER="$(git rev-parse --show-toplevel)/node_modules/.bin/prettier"
+
+# Check for prettier
+if [[ ! -x "$PRETTIER" ]]; then
+    printf "\t\033[41mPlease install Prettier\033[0m (npm i --save-dev prettier)"
+    exit 1
+fi
+
+# Prettify all staged .js files
+echo "$jsfiles" | xargs $PRETTIER --write
+
+# Add back the modified/prettified files to staging
+echo "$jsfiles" | xargs git add
+
+exit 0
