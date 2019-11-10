@@ -57,7 +57,7 @@ A NodeJS API that creates and maintains sensor-to-participant allocations for ea
 
    "docker run -p 8080:8080 fitness_sensor" (Use sudo, if required). This will start the server.
 
-4) Start the frontend app.
+4) Start the frontend app. (Refer : https://github.com/Amith-Ramachandran/workoutwebui)
 
 ## Exposed APIs
 
