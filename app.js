@@ -15,7 +15,7 @@ router.use((_req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-Width, Content-Type, Accept"
+    "Origin, X-Requested-Width, Content-Type, Accept, userid"
   );
   next();
 });
