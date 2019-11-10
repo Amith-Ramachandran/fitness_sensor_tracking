@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN
       }
     },
-    {}
+    { timestamps: false }
   );
   sensor.associate = models => {
     // associations can be defined here

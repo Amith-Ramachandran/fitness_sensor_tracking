@@ -13,7 +13,7 @@ module.exports = (Sequelize, DataTypes) => {
         allowNull: false
       }
     },
-    { underscored: true }
+    { underscored: true, timestamps: false }
   );
   workout.associate = models => {
     // associations can be defined here

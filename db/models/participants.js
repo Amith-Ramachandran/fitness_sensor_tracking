@@ -32,7 +32,7 @@ module.exports = (Sequelize, DataTypes) => {
         }
       }
     },
-    {}
+    { timestamps: false }
   );
   participant.associate = models => {
     // associations can be defined here

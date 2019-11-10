@@ -23,7 +23,7 @@ module.exports = (Sequelize, DataTypes) => {
         }
       }
     },
-    {}
+    { timestamps: false }
   );
   privatesensor.associate = models => {
     // associations can be defined here
